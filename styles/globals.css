@@ -1,0 +1,154 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #0d0d0d;
+  --surface: #141414;
+  --card: #151515;
+  --muted: #9a9a9a;
+  --text: #e6e6e6;
+  --accent: #ff4d4d;
+}
+
+/* Local Placard MT Std Condensed */
+@font-face {
+  font-family: "Placard MT Std Condensed";
+  src: url("/fonts/PlacardMTStdCondensed.OTF") format("opentype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Placard MT Std Condensed";
+  src: url("/fonts/PlacardMTStdCondensedBd.OTF") format("opentype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial;
+}
+
+/* Typography: Placard for headers, serif for subtitles/body */
+h1, h2, h3, h4,
+.heading {
+  font-family: "Placard MT Std Condensed", ui-sans-serif, system-ui, sans-serif;
+}
+
+.subtitle {
+  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+}
+
+.container {
+  margin: 0 auto;
+}
+
+/* smaller nav height */
+.navbar {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -6px;
+  height: 2px;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.22s ease;
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* left accent bar for project cards */
+.card-accent {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--accent);
+  opacity: 0.12;
+}
+
+.focus-outline:focus {
+  outline: 2px solid rgba(255, 77, 77, 0.12);
+  outline-offset: 4px;
+}
+
+/* hero phone fallback */
+.phone-mock {
+  width: 280px;
+  height: 520px;
+  border-radius: 28px;
+  background: #0b0b0b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* timeline */
+.timeline {
+  position: relative;
+  padding-left: 36px;
+}
+.timeline-line {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  width: 4px;
+  background: var(--accent);
+  opacity: 0.12;
+  border-radius: 2px;
+  transform-origin: top;
+}
+.timeline-item {
+  position: relative;
+  padding: 18px 0;
+}
+.timeline-dot {
+  position: absolute;
+  left: 6px;
+  top: 20px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  opacity: 0.95;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* small utilities for peeking projects */
+.projects-peek {
+  margin-top: -80px;
+  position: relative;
+  z-index: 10;
+}
