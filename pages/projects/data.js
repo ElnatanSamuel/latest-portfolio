@@ -143,3 +143,9 @@ export const PROJECT_DETAILS = {
     github: "https://github.com/ElnatanSamuel/conify",
   },
 };
+
+// NOTE: This file lives under `pages/`, so Next.js expects a default page export.
+// We provide a no-op component to satisfy the requirement and avoid build errors.
+export default function DataPage() {
+  return null;
+}
