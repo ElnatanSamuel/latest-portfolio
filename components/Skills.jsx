@@ -17,6 +17,10 @@ import {
   SiGithub,
   SiPostman,
   SiVisualstudiocode,
+  SiNextdotjs,
+  SiReactnative,
+  SiExpress,
+  SiMongodb,
 } from "react-icons/si";
 import { useRef } from "react";
 
@@ -24,26 +28,23 @@ const GROUPS = [
   {
     title: "FRONTEND",
     items: [
-      { name: "HTML", icon: SiHtml5 },
-      { name: "CSS", icon: SiCss3 },
       { name: "JavaScript", icon: SiJavascript },
       { name: "TypeScript", icon: SiTypescript },
       { name: "React", icon: FaReact },
+      { name: "React Native", icon: FaReact },
+      { name: "Next.js", icon: SiNextdotjs },
       { name: "Redux", icon: SiRedux },
-      { name: "Zustand", icon: null },
       { name: "Tailwind", icon: SiTailwindcss },
-      { name: "SASS", icon: SiSass },
-      { name: "Styled-Components", icon: SiStyledcomponents },
-      { name: "Flutter", icon: SiFlutter },
     ],
   },
   {
     title: "BACKEND",
     items: [
       { name: "Node.js", icon: FaNodeJs },
+      { name: "Express.js", icon: SiExpress },
       { name: "Firebase", icon: SiFirebase },
-      { name: "Supabase", icon: SiSupabase },
       { name: "Postgres", icon: SiPostgresql },
+      { name: "MongoDB", icon: SiMongodb },
     ],
   },
   {

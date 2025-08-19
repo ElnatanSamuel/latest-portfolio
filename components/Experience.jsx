@@ -5,42 +5,52 @@ export default function Experience() {
   const items = [
     {
       date: "2025 — Present",
-      role: "Mobile App Developer",
-      where: "Freelance / Remote",
+      role: "React Native Developer",
+      where: "EagleLion System Technologies",
       bullets: [
-        "Shipping cross‑platform apps with React Native & Expo",
-        "Realtime features with Firebase/Socket.io",
-        "Perf audits, bundle size cuts, offline first",
+        "Develop and maintain commercial banking and E-Wallet apps by implementing new features, fixing bugs, and building responsive UI",
+        "Collaborate with cross-functional teams to enhance performance, ensure stability, and deliver seamless user experience in existing projects",
       ],
     },
     {
-      date: "2024",
-      role: "Frontend Engineer",
-      where: "Agency Y",
+      date: "Sep 2024 – Dec 2024",
+      role: "React Native Developer",
+      where: "Bamacon Construction",
       bullets: [
-        "Built design‑systems with Tailwind + Radix",
-        "Motion-first landing pages with Framer Motion",
-        "Analytics A/B experiments and tracking",
+        "Developed a cross-platform construction management app using React Native.",
+        "Integrated a GraphQL API to streamline backend data retrieval.",
+        "Contributed to design improvements and conducted user experience testing.",
       ],
     },
     {
-      date: "2023",
-      role: "Mobile Engineer",
-      where: "Startup X",
+      date: "Aug 2024 – Nov 2024",
+      role: " AI Research/Web development Intern",
+      where: "iCog Labs",
       bullets: [
-        "Flutter rewrite with CI/CD for Android & iOS",
-        "Push notifications & deep links",
-        "Crash reporting + session replay",
+        "Trained and implemented AI models using diverse datasets.",
+        "Conducted research on AGI concepts to improve LLM intelligence.",
+        "Explored Deep Learning and Reinforcement Learning principles to model human-like intelligence.",
+        "Developed a knowledge graph and cleaned datasets to populate the companyʼs database.",
       ],
     },
     {
-      date: "2022",
-      role: "Junior Developer",
-      where: "Studio Z",
+      date: "Feb 2024 – Jun 2024",
+      role: "React Native Developer",
+      where: "Berenda",
       bullets: [
-        "React web apps and admin panels",
-        "API integrations, Auth, forms & validation",
-        "Unit, E2E tests and docs",
+        "Built a React Native mobile app with smooth, responsive UI for iOS and Android.",
+        "Developed both frontend and backend components to ensure seamless performance.",
+        "Integrated APIs and optimized app features to enhance user experience.",
+      ],
+    },
+    {
+      date: "Jun 2023 – Dec 2023",
+      role: "Fullstack Web Developer",
+      where: "Ale Interiors",
+      bullets: [
+        "Designed and developed responsive user interfaces using React, managing the full frontend development lifecycle.",
+        "Integrated CMS to enhance content management efficiency for clients.",
+        "•Focused on performance optimization, creating fast, scalable websites with exceptional user experiences.",
       ],
     },
   ];
@@ -113,8 +123,7 @@ export default function Experience() {
           {it.date}
         </div>
         <div className="mt-1 text-2xl md:text-3xl font-extrabold">
-          {it.role}{" "}
-          <span className="text-white/60 font-semibold">— {it.where}</span>
+          {it.role} <p className="text-white/60 font-semibold">{it.where}</p>
         </div>
         <ul className="mt-3 grid gap-1.5 text-sm md:text-[15px] text-white/70 list-disc ml-5">
           {it.bullets.map((b) => (
@@ -132,9 +141,6 @@ export default function Experience() {
     >
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <h2 className="text-3xl md:text-4xl font-extrabold">Experience</h2>
-        <p className="text-white/60 mt-2">
-          Scroll — the focused role pops while others recede.
-        </p>
 
         <div ref={containerRef} className="mt-10 relative max-w-2xl">
           <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[1px] bg-white/5" />

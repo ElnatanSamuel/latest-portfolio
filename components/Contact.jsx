@@ -6,13 +6,13 @@ export default function Contact() {
   const socials = [
     {
       icon: FaLinkedin,
-      href: "https://linkedin.com/in/your-username",
+      href: "https://www.linkedin.com/in/elnatansamuel999/",
       label: "LinkedIn",
     },
-    { icon: FaEnvelope, href: "mailto:you@example.com", label: "Email" },
+    { icon: FaEnvelope, href: "elnatansamuel25@gmail.com", label: "Email" },
     {
       icon: FaGithub,
-      href: "https://github.com/your-username",
+      href: "https://github.com/ElnatanSamuel",
       label: "GitHub",
     },
   ];

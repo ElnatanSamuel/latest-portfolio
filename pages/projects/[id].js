@@ -1,35 +1,108 @@
+import { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { PROJECT_DETAILS } from "./data";
 
-const PROJECTS = [
-  {
-    id: "cyclesync",
-    title: "CycleSync",
-    images: [
-      "https://images.unsplash.com/photo-1557180295-76eee20ae8aa?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=10b5b1b9c6c6f1b4f8a6c6f1e5a8b6d1",
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=9b4c2b4e7a6f9c5d6e7a8b9c0d1e2f3",
-    ],
-    stack: ["React Native", "Firebase", "TypeScript"],
-    description:
-      "CycleSync is a smart chore scheduler that automatically reorders tasks based on completion cycles. Offline-first, background sync and push notifications.",
-  },
-  {
-    id: "fithome",
-    title: "FitHome",
-    images: [
-      "https://images.unsplash.com/photo-1526403224740-5c1b6d8f1a2c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a7b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
-      "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d",
-    ],
-    stack: ["Flutter", "SQLite"],
-    description:
-      "FitHome is a minimalist home workout tracker with daily plans, progress charts and small equipment support.",
-  },
-];
+const IMG_EXTS = ["png", "jpg", "jpeg", "webp"];
+const VIDEO_MIME = {
+  mp4: "video/mp4",
+  webm: "video/webm",
+  mov: "video/quicktime",
+};
+
+function LocalImage({ id, suffix, containerClass = "", imgClass = "" }) {
+  const [idx, setIdx] = useState(0);
+  const [hidden, setHidden] = useState(false);
+  const candidates = useMemo(() => {
+    const name = suffix ? `${id}-${suffix}` : id;
+    return IMG_EXTS.flatMap((ext) => [
+      `/images/${name}.${ext}`,
+      `/image/${name}.${ext}`,
+    ]);
+  }, [id, suffix]);
+
+  if (hidden) return null;
+  const src = candidates[Math.min(idx, candidates.length - 1)];
+
+  return (
+    <div
+      className={`overflow-hidden ring-1 ring-white/10 bg-white/5 ${containerClass}`}
+    >
+      <img
+        src={src}
+        alt={`${id}${suffix ? `-${suffix}` : ""}`}
+        className={`w-full object-contain ${imgClass}`}
+        onError={() => {
+          if (idx < candidates.length - 1) setIdx((v) => v + 1);
+          else setHidden(true);
+        }}
+      />
+    </div>
+  );
+}
+
+// Image that retries alternative paths/extensions for provided src
+function ResilientImage({ src, alt, containerClass = "", imgClass = "" }) {
+  const [idx, setIdx] = useState(0);
+  const [hidden, setHidden] = useState(false);
+  const candidates = useMemo(() => {
+    // Start with the given src
+    const bases = new Set([src]);
+    // try singular folder too
+    if (src.startsWith("/images/"))
+      bases.add(src.replace("/images/", "/image/"));
+    // handle missing space before parenthesis e.g. banking(1) -> banking (1)
+    if (src.includes("(") && !src.includes(" (")) {
+      bases.add(src.replace("(", " ("));
+      if (src.startsWith("/images/")) {
+        bases.add(src.replace("/images/", "/image/").replace("(", " ("));
+      }
+    }
+
+    // Build full list by swapping extensions for each base
+    const list = [];
+    for (const b of bases) {
+      const m = b.match(/\.(png|jpg|jpeg|webp)$/i);
+      if (m) {
+        const baseNoExt = b.slice(0, -m[0].length);
+        IMG_EXTS.forEach((ext) => {
+          const cand = `${baseNoExt}.${ext}`;
+          if (!list.includes(cand)) list.push(cand);
+        });
+      } else {
+        // no extension: append all
+        IMG_EXTS.forEach((ext) => {
+          const cand = `${b}.${ext}`;
+          if (!list.includes(cand)) list.push(cand);
+        });
+      }
+    }
+    return list;
+  }, [src]);
+
+  if (hidden) return null;
+  const current = candidates[Math.min(idx, candidates.length - 1)];
+  return (
+    <div
+      className={`overflow-hidden ring-1 ring-white/10 bg-white/5 ${containerClass}`}
+    >
+      <img
+        src={current}
+        alt={alt}
+        className={`w-full object-contain ${imgClass}`}
+        onError={() => {
+          if (idx < candidates.length - 1) setIdx((v) => v + 1);
+          else setHidden(true);
+        }}
+      />
+    </div>
+  );
+}
 
 export default function ProjectDetail() {
   const router = useRouter();
   const { id } = router.query;
-  const project = PROJECTS.find((p) => p.id === id);
+  const project = id ? PROJECT_DETAILS[id] : undefined;
 
   if (!project)
     return (
@@ -49,49 +122,116 @@ export default function ProjectDetail() {
 
   return (
     <div className="container py-16">
-      <Link href="/" className="text-sm text-muted">
+      <Link href="/" className="text-sm text-white/60 hover:text-white">
         ← Back
       </Link>
       <h1 className="mt-4 text-3xl font-bold">{project.title}</h1>
-      <p className="text-muted mt-2 max-w-2xl">{project.description}</p>
+      <p className="text-white/70 mt-2 max-w-2xl">{project.description}</p>
 
-      <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* Top video centered */}
+      <div className="mt-6 max-w-4xl mx-auto">
+        <div className="aspect-video overflow-hidden ring-1 ring-white/10 bg-white/5">
+          <video className="w-full h-full" controls preload="metadata">
+            {id && (
+              <>
+                <source src={`/videos/${id}.mp4`} type={VIDEO_MIME.mp4} />
+                <source src={`/videos/${id}.webm`} type={VIDEO_MIME.webm} />
+                <source src={`/videos/${id}.mov`} type={VIDEO_MIME.mov} />
+              </>
+            )}
+            {/* Also accept local video paths provided in PROJECT_DETAILS.videos */}
+            {project?.videos
+              ?.filter((v) => typeof v === "string" && v.startsWith("/"))
+              .map((v, i) => {
+                const ext = v.split(".").pop()?.toLowerCase();
+                const type = VIDEO_MIME[ext] || "video/mp4";
+                return <source key={`local-${i}`} src={v} type={type} />;
+              })}
+          </video>
+        </div>
+      </div>
+
+      {/* Optional embeds below */}
+      {project?.videos
+        ?.filter((v) => /^https?:\/\//.test(v))
+        .map((v, i) => (
+          <div
+            key={`embed-${i}`}
+            className="mt-4 max-w-4xl mx-auto aspect-video overflow-hidden ring-1 ring-white/10 bg-white/5"
+          >
+            <iframe
+              src={v}
+              title={`video ${i + 1}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerPolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
+        ))}
+
+      {/* Content grid: images on the left, tech on the right */}
+      <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
         <div>
-          {project.images.map((src, i) => (
-            <div key={i} className="mb-4 card overflow-hidden">
-              <img src={src} alt={`screenshot ${i + 1}`} />
-            </div>
-          ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+            {project?.images?.length ? (
+              project.images.map((src, i) => (
+                <ResilientImage
+                  key={`img-${i}`}
+                  src={src}
+                  alt={`screenshot ${i + 1}`}
+                  containerClass="aspect-[9/16]"
+                  imgClass="h-full"
+                />
+              ))
+            ) : (
+              <>
+                {id && (
+                  <LocalImage
+                    id={id}
+                    containerClass="aspect-[9/16]"
+                    imgClass="h-full"
+                  />
+                )}
+                {id &&
+                  [1, 2, 3].map((n) => (
+                    <LocalImage
+                      key={n}
+                      id={id}
+                      suffix={n}
+                      containerClass="aspect-[9/16]"
+                      imgClass="h-full"
+                    />
+                  ))}
+              </>
+            )}
+          </div>
         </div>
         <div>
-          <div className="card p-6">
-            <h3 className="font-medium">What I built</h3>
-            <ul className="mt-3 list-disc ml-5 text-muted space-y-2">
-              <li>Offline-first sync and background job scheduling</li>
-              <li>Push notifications and deep links</li>
-              <li>
-                Optimized list rendering and memory usage for low-end devices
-              </li>
-            </ul>
-
-            <h4 className="mt-6 font-medium">Tech</h4>
+          <div className="p-6 ring-1 ring-white/10 bg-white/5 md:sticky md:top-6">
+            <h3 className="font-medium">Tech</h3>
             <div className="mt-3 flex flex-wrap gap-2">
-              {project.stack.map((s) => (
+              {project.stack?.map((s) => (
                 <span
                   key={s}
-                  className="text-xs text-muted border px-2 py-1 rounded"
+                  className="text-xs px-2 py-1 bg-white/5 ring-1 ring-white/10"
                 >
                   {s}
                 </span>
               ))}
             </div>
 
-            <a
-              href="#"
-              className="mt-6 inline-block px-4 py-2 border border-[rgba(255,255,255,0.04)] rounded"
-            >
-              View repo
-            </a>
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-block px-4 py-1 text-sm ring-1 ring-white/15 bg-white/5 hover:bg-white/10 transition"
+              >
+                View repo →
+              </a>
+            )}
           </div>
         </div>
       </div>
